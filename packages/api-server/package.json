@@ -5,8 +5,10 @@
   "scripts": {
     "start": "ts-node index.ts"
   },
+	"main": "index.ts",
   "dependencies": {
     "@trpc/server": "^9.26.2",
+    "@types/cors": "^2.8.12",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "zod": "^3.17.10"
