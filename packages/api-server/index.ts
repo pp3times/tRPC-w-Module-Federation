@@ -1,7 +1,23 @@
 import express from "express";
+import * as trpc from "@trpc/server";
+import * as trpcExpress from "@trpc/server/adapters/express";
+
+const appRouter = trpc.router().query("test", {
+  resolve() {
+    return "Hello World";
+  },
+});
 
 const app = express();
 const port = 8080;
+
+app.use(
+  "/api",
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+    createContext: () => null,
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Hello from api-server");
