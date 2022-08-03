@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  invalidateQueries,
+} from "react-query";
 
 import "./index.scss";
 import { trpc } from "./trpc";
@@ -8,10 +12,29 @@ import { trpc } from "./trpc";
 const client = new QueryClient();
 
 const AppContent = () => {
-  const test = trpc.useQuery(["test"]);
+  const getMessages = trpc.useQuery(["getMessages"]);
+
+  const [user, setUser] = useState("");
+  const [message, setMessage] = useState("");
+	
+  const addMessage = trpc.useMutation(["addMessage"]);
+  const onAdd = () => {
+    addMessage.mutate(
+      {
+        message: "Yo World",
+        user: "Jeremy",
+      },
+      {
+        onSuccess: () => {
+          client.invalidateQueries(["getMessages"]);
+        },
+      }
+    );
+  };
   return (
     <div className="mt-10 text-3xl mx-auto max-w-6xl">
-      <div>{JSON.stringify(test.data)}</div>
+      <div>{JSON.stringify(getMessages.data)}</div>
+      <button onClick={onAdd}>Add message</button>
     </div>
   );
 };
